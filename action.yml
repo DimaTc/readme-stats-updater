@@ -3,7 +3,6 @@ description: 'Creates a readme file with the statistics of the user such as most
 inputs:
   GITHUB_TOKEN:
     description: 'GitHub token that will be used to fetch the statistics'
-    required: true
   filename:
     description: 'The output file to save, default to README.md'
     default: 'README.md'
