@@ -4,7 +4,7 @@ import { updateReadme } from './src/githubStats.js';
 
 try {
     const fileName = core.getInput('filename') || 'README.md';
-    const token = core.getInput('GITHUB_TOKEN');
+    const token = core.getInput('GITHUB_TOKEN') || process.env.GITHUB_TOKEN || '';
     process.env.GITHUB_TOKEN = token;
     await updateReadme(fileName);
     console.log(`Successfully updated ${fileName} with top programming languages.`);
