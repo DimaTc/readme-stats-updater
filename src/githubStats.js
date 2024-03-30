@@ -1,14 +1,10 @@
 // Import necessary modules
-import dotenv from 'dotenv';
 import fs from 'fs';
 import { fetchTopLanguages } from './languagesStats.js'
 
 const startTableContent = '\n|||\n|---|---|\n'
 const startComment = /^\s*<\!--\s*\{Start Statistics\}\s*-->\s*?$/m
 const endComment = /^\s*<\!--\s*\{Stop Statistics\}\s*-->\s*?$/m
-
-// Load environment variables from .env file
-dotenv.config();
 
 /**
  * Generates an ASCII progress bar.

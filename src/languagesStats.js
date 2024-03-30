@@ -47,7 +47,7 @@ export const fetchTopLanguages = async () => {
   const parameters = { login: process.env.GITHUB_REPOSITORY_OWNER };
 
   const { user } = await requestData(TOP_LANGUAGES_QUERY, parameters);
-  if (!user) throw new Error('Could not retrieve repository statistics.');
+  if (!user || !user.repositories) throw new Error('Could not retrieve repository statistics.');
 
   const languages = aggregateLanguages(user.repositories.nodes);
   return Object.fromEntries(Object.entries(languages).sort(([, a], [, b]) => b.size - a.size));
