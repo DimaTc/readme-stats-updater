@@ -23,7 +23,7 @@ Insert the following hidden markers anywhere in your `README.md` file where you 
 Create a new workflow file (e.g., .github/workflows/update-readme.yml) in your repository or add the following steps to an existing workflow:
 
 ```yaml
-name: Update Readme with Language Stats
+name: Update readme with Language Stats
 
 on:
   schedule:
@@ -37,15 +37,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          persist-credentials: false
 
       - name: Update README Language Statistics
         uses: DimaTc/readme-stats-updater@main
-        with:
-          filename: 'README.md'  # Optional: specify the path to README.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit changes
+        run: |
+          git config --global user.name 'GitHub Actions Bot'
+          git config --global user.email 'actions@github.com'
+          git add README.md
+          git commit -m "Update README with language statistics" || echo "No changes to commit"
+          git push
+
 ```
 ### Inputs
 `filename`: Optional. The path to the `README.md` file you want to update. Defaults to `README.md` at the repository root.  
