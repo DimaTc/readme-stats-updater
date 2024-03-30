@@ -1,0 +1,16 @@
+name: 'readme-stats-updater'
+description: 'Creates a readme file with the statistics of the user such as most-used programming languages.'
+inputs:
+  GITHUB_TOKEN:
+    description: 'GitHub token that will be used to fetch the statistics'
+    required: true
+  filename:
+    description: 'The output file to save, default to README.md'
+    default: 'README.md'
+  include-private-repos:
+    description: 'Wether or not to include private repos in the statistics'
+    default: false
+  
+runs:
+  using: 'node20'
+  main: 'index.js'
