@@ -7,9 +7,6 @@ inputs:
   filename:
     description: 'The output file to save, default to README.md'
     default: 'README.md'
-  include-private-repos:
-    description: 'Wether or not to include private repos in the statistics'
-    default: false
   
 runs:
   using: 'node20'
