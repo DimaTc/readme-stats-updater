@@ -3,9 +3,9 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import { fetchTopLanguages } from './languagesStats.js'
 
-const startTableContent = '|||\n|---|---|\n'
-const startComment = '<!-- {Start Statistics} -->'
-const endComment = '<!-- {Stop Statistics} -->'
+const startTableContent = '\n|||\n|---|---|\n'
+const startComment = /^\s*<\!--\s*\{Start Statistics\}\s*-->\s*?$/m
+const endComment = /^\s*<\!--\s*\{Stop Statistics\}\s*-->\s*?$/m
 
 // Load environment variables from .env file
 dotenv.config();
@@ -46,11 +46,20 @@ export const updateReadme = async (filepath) => {
         language,
         progressBar: generateProgressBar(size, maxSize),
     }));
-    const startIndex = readmeContent.indexOf(startComment) + startComment.length;
-    const endIndex = readmeContent.indexOf(endComment);
-    if (startIndex < startComment.length || endIndex < 0 || startIndex >= endIndex) {
-        throw new Error('Placeholder comments not found or are in the wrong order.');
+    const startMatch = readmeContent.match(startComment);
+    const endMatch = readmeContent.match(endComment);
+    console.log(`startMatch: ${startMatch} | endMatch: ${endMatch}`);
+    if (!startMatch || !endMatch) {
+        throw new Error('Start or end comment markers not found in README.');
     }
+
+    const startIndex = startMatch.index + startMatch[0].length;
+    const endIndex = endMatch.index;
+    console.log(`Start Index: ${startIndex} | End Index: ${endIndex}`)
+    if (startIndex > endIndex) {
+        throw new Error('End marker appears before start marker.');
+    }
+
 
     const updatedReadmeContent =
         readmeContent.substring(0, startIndex) +
