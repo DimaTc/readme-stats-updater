@@ -15,8 +15,8 @@ Once integrated into a GitHub workflow, this action scans your public repositori
 Insert the following hidden markers anywhere in your `README.md` file where you want the languages table to appear:
 
 ```markdown
-<!-- {Start Statistics} -->
-<!-- {Stop Statistics} -->
+<!-- LANGS:START -->
+<!-- LANGS:STOP -->
 ```
 
 ### Step 2: Add the Action to Your Workflow
