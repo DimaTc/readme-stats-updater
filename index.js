@@ -1,4 +1,5 @@
 import core from '@actions/core';
+// eslint-disable-next-line no-unused-vars
 import github from '@actions/github';
 import { updateReadme } from './src/githubStats.js';
 

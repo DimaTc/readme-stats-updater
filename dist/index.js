@@ -30678,6 +30678,7 @@ __nccwpck_require__.a(__webpack_module__, async (__webpack_handle_async_dependen
 /* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(5438);
 /* harmony import */ var _src_githubStats_js__WEBPACK_IMPORTED_MODULE_2__ = __nccwpck_require__(5188);
 
+// eslint-disable-next-line no-unused-vars
 
 
 
@@ -30691,6 +30692,7 @@ try {
     console.error(error.message);
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(error.message);
 }
+
 __webpack_async_result__();
 } catch(e) { __webpack_async_result__(e); } }, 1);
 
@@ -31473,30 +31475,29 @@ const TOP_LANGUAGES_QUERY = `
  * @param {Array} repositories - The array of repositories.
  * @returns {Object} Accumulated sizes of languages across repositories.
  */
-const aggregateLanguages = repositories => repositories.reduce((accumulator, repository) => {
-  repository.languages.edges.forEach(({ size, node: { name, color } }) => {
-    if (!accumulator[name])
-      accumulator[name] = { color, size: 0 };
-    accumulator[name].size += size;
-  });
-  return accumulator;
-}, {});
-
+const aggregateLanguages = repositories =>
+    repositories.reduce((accumulator, repository) => {
+        repository.languages.edges.forEach(({ size, node: { name, color } }) => {
+            if (!accumulator[name]) accumulator[name] = { color, size: 0 };
+            accumulator[name].size += size;
+        });
+        return accumulator;
+    }, {});
 
 /**
  * Fetches and ranks languages used across a user's repositories.
  * @returns {Object} Sorted languages by usage.
  */
 const fetchTopLanguages = async () => {
-  const headers = { authorization: `Bearer ${process.env.GITHUB_TOKEN}` };
-  const requestData = graphql2.defaults({ headers });
-  const parameters = { login: process.env.GITHUB_REPOSITORY_OWNER };
+    const headers = { authorization: `Bearer ${process.env.GITHUB_TOKEN}` };
+    const requestData = graphql2.defaults({ headers });
+    const parameters = { login: process.env.GITHUB_REPOSITORY_OWNER };
 
-  const { user } = await requestData(TOP_LANGUAGES_QUERY, parameters);
-  if (!user || !user.repositories) throw new Error('Could not retrieve repository statistics.');
+    const { user } = await requestData(TOP_LANGUAGES_QUERY, parameters);
+    if (!user || !user.repositories) throw new Error('Could not retrieve repository statistics.');
 
-  const languages = aggregateLanguages(user.repositories.nodes);
-  return Object.fromEntries(Object.entries(languages).sort(([, a], [, b]) => b.size - a.size));
+    const languages = aggregateLanguages(user.repositories.nodes);
+    return Object.fromEntries(Object.entries(languages).sort(([, a], [, b]) => b.size - a.size));
 };
 
 ;// CONCATENATED MODULE: ./src/githubStats.js
@@ -31510,7 +31511,7 @@ const fetchTopLanguages = async () => {
  * @param {number} length - Length of the progress bar.
  * @param {string} fullChar - Character for the filled portion.
  * @param {string} emptyChar - Character for the empty portion.
- * @returns {string} The ASCII progress bar.
+ * @return {string} The ASCII progress bar.
  */
 const generateProgressBar = (value, maxValue, length = 20, fullChar = '█', emptyChar = '░') => {
     const percentage = Math.min(100, (value / maxValue) * 100);
@@ -31521,10 +31522,12 @@ const generateProgressBar = (value, maxValue, length = 20, fullChar = '█', emp
 
 const populateLanguageTable = languageStats => {
     const startTableContent = '\n|||\n|---|---|\n';
-    return languageStats.reduce((table, { language, progressBar }) => {
-        const row = `| ${language} | ${progressBar} |`;
-        return table + row + '\n';
-    }, startTableContent) + '|||\n';
+    return (
+        languageStats.reduce((table, { language, progressBar }) => {
+            const row = `| ${language} | ${progressBar} |`;
+            return table + row + '\n';
+        }, startTableContent) + '|||\n'
+    );
 };
 
 const updateSection = (readmeContent, sectionStartTag, sectionEndTag, newContent) => {
@@ -31535,16 +31538,16 @@ const updateSection = (readmeContent, sectionStartTag, sectionEndTag, newContent
     const endMatch = readmeContent.match(endTagRegex);
 
     if (!startMatch || !endMatch) {
-        console.error(`Start match or end match were not found.\nstart: ${startMatch} | end: ${endMatch}`);
-        throw new Error('Section markers not found in README.');
+        console.warn(`Start match or end match were not found.\nstart: ${startMatch} | end: ${endMatch}`);
+        return readmeContent;
     }
 
     const startIndex = startMatch.index + startMatch[0].length;
     const endIndex = endMatch.index;
 
     if (startIndex > endIndex) {
-        console.error(`Indices do no make sense - start: ${startIndex}, end: ${endIndex}`)
-        throw new Error(`End marker appears before start marker for ${sectionStartTag}.`);
+        console.error(`Indices do no make sense - start: ${startIndex}, end: ${endIndex}`);
+        return readmeContent;
     }
 
     return readmeContent.substring(0, startIndex) + newContent + readmeContent.substring(endIndex);
@@ -31552,15 +31555,25 @@ const updateSection = (readmeContent, sectionStartTag, sectionEndTag, newContent
 
 const updateDateTimeSection = () => {
     const now = new Date();
-    // Example format: January 01, 2024, 12:00:00
-    return `\nLast Updated: ${now.toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' })}\n`;
+    // Format: September 10, 2024, 12:00:00 AM GMT+2
+    const formattedDateTime = new Intl.DateTimeFormat('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        timeZoneName: 'short',
+    }).format(now);
+
+    return `Last Updated: ${formattedDateTime}\n`;
 };
 
 /**
  * Updates the README.md file with top programming languages used.
  * @param {string} filepath - The filepath to the readme file to update.
  */
-const updateReadme = async (filepath) => {
+const updateReadme = async filepath => {
     let readmeContent = external_fs_.readFileSync(filepath, 'utf8');
 
     // Update languages stats
@@ -31576,9 +31589,10 @@ const updateReadme = async (filepath) => {
 
     // Future stats updates can follow a similar pattern:
     // readmeContent = updateSection(readmeContent, 'COMMITS:START', 'COMMITS:END', populateCommitsTable(commitsStats));
-
+    if (readmeContent === undefined) return;
     external_fs_.writeFileSync(filepath, readmeContent, 'utf8');
 };
+
 
 /***/ })
 
