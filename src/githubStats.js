@@ -63,10 +63,10 @@ export const updateReadme = async (filepath) => {
         progressBar: generateProgressBar(size, maxSize),
     }));
 
-    readmeContent = updateSection(readmeContent, 'LANGS:START', 'LANGS:STOP', populateLanguageTable(languageStats));
+    readmeContent = updateSection(readmeContent, 'LANGS:START', 'LANGS:END', populateLanguageTable(languageStats));
 
     // Future stats updates can follow a similar pattern:
-    // readmeContent = updateSection(readmeContent, 'COMMITS:START', 'COMMITS:STOP', populateCommitsTable(commitsStats));
+    // readmeContent = updateSection(readmeContent, 'COMMITS:START', 'COMMITS:END', populateCommitsTable(commitsStats));
 
     fs.writeFileSync(filepath, readmeContent, 'utf8');
 };

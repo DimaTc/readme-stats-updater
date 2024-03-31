@@ -16,7 +16,7 @@ Insert the following hidden markers anywhere in your `README.md` file where you 
 
 ```markdown
 <!-- LANGS:START -->
-<!-- LANGS:STOP -->
+<!-- LANGS:END -->
 ```
 
 ### Step 2: Add the Action to Your Workflow
