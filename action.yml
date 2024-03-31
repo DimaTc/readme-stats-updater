@@ -6,7 +6,9 @@ inputs:
   filename:
     description: 'The output file to save, default to README.md'
     default: 'README.md'
-  
+branding:
+  icon: 'code'
+  color: '#58A6FF'
 runs:
   using: 'node20'
   main: 'dist/index.js'
