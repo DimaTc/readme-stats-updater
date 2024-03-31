@@ -16,13 +16,13 @@ To display your programming languages stats and the last update date, insert the
 For programming languages table:
 ```markdown
 <!-- LANGS:START -->
-<!-- LANGS:STOP -->
+<!-- LANGS:END -->
 ```
 
 For the last update date:
 ```markdown
 <!-- DATE:START -->
-<!-- DATE:STOP -->
+<!-- DATE:END -->
 ```
 
 ### Step 2: Add the Action to Your Workflow
@@ -78,7 +78,7 @@ Programming languages stats:
 
 Last updated date:
 ```
-Last Updated: September 10, 2024, 12:00:00
+Last Updated: March 31, 2024 at 09:34:20 PM GMT+3
 ```
 
 ### Support and Contributions

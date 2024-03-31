@@ -33,8 +33,8 @@ const updateSection = (readmeContent, sectionStartTag, sectionEndTag, newContent
     const endMatch = readmeContent.match(endTagRegex);
 
     if (!startMatch || !endMatch) {
-        console.error(`Start match or end match were not found.\nstart: ${startMatch} | end: ${endMatch}`);
-        throw new Error('Section markers not found in README.');
+        console.warn(`Start match or end match were not found.\nstart: ${startMatch} | end: ${endMatch}`);
+        return readmeContent
     }
 
     const startIndex = startMatch.index + startMatch[0].length;
@@ -42,7 +42,7 @@ const updateSection = (readmeContent, sectionStartTag, sectionEndTag, newContent
 
     if (startIndex > endIndex) {
         console.error(`Indices do no make sense - start: ${startIndex}, end: ${endIndex}`)
-        throw new Error(`End marker appears before start marker for ${sectionStartTag}.`);
+        return readmeContent
     }
 
     return readmeContent.substring(0, startIndex) + newContent + readmeContent.substring(endIndex);
@@ -50,9 +50,16 @@ const updateSection = (readmeContent, sectionStartTag, sectionEndTag, newContent
 
 const updateDateTimeSection = () => {
     const now = new Date();
-    // Example format: January 01, 2024, 12:00:00
-    return `\nLast Updated: ${now.toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' })}\n`;
+    // Format: September 10, 2024, 12:00:00 AM GMT+2
+    const formattedDateTime = new Intl.DateTimeFormat('en-US', {
+        year: 'numeric', month: 'long', day: 'numeric',
+        hour: '2-digit', minute: '2-digit', second: '2-digit',
+        timeZoneName: 'short' // This option adds the timezone abbreviation
+    }).format(now);
+
+    return `Last Updated: ${formattedDateTime}\n`;
 };
+
 
 /**
  * Updates the README.md file with top programming languages used.
@@ -74,6 +81,6 @@ export const updateReadme = async (filepath) => {
 
     // Future stats updates can follow a similar pattern:
     // readmeContent = updateSection(readmeContent, 'COMMITS:START', 'COMMITS:END', populateCommitsTable(commitsStats));
-
+    if (readmeContent === undefined) return
     fs.writeFileSync(filepath, readmeContent, 'utf8');
 };
