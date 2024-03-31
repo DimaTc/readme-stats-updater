@@ -48,6 +48,12 @@ const updateSection = (readmeContent, sectionStartTag, sectionEndTag, newContent
     return readmeContent.substring(0, startIndex) + newContent + readmeContent.substring(endIndex);
 };
 
+const updateDateTimeSection = () => {
+    const now = new Date();
+    // Example format: January 01, 2024, 12:00:00
+    return `\nLast Updated: ${now.toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' })}\n`;
+};
+
 /**
  * Updates the README.md file with top programming languages used.
  * @param {string} filepath - The filepath to the readme file to update.
@@ -64,6 +70,7 @@ export const updateReadme = async (filepath) => {
     }));
 
     readmeContent = updateSection(readmeContent, 'LANGS:START', 'LANGS:END', populateLanguageTable(languageStats));
+    readmeContent = updateSection(readmeContent, 'DATE:START', 'DATE:END', updateDateTimeSection());
 
     // Future stats updates can follow a similar pattern:
     // readmeContent = updateSection(readmeContent, 'COMMITS:START', 'COMMITS:END', populateCommitsTable(commitsStats));
